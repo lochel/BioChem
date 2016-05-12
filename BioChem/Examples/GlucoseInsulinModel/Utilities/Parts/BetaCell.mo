@@ -1,0 +1,43 @@
+within BioChem.Examples.GlucoseInsulinModel.Utilities.Parts;
+model BetaCell
+  extends BioChem.Compartments.Compartment(V(
+                                           start = 1.0));
+  BioChem.Units.Concentration i_po(start=3.6);
+  BioChem.Units.Concentration g;
+  BioChem.Units.Concentration g_p;
+  BioChem.Units.Concentration y;
+  BioChem.Units.Concentration y_signal(start=0);
+  BioChem.Units.Concentration s_signal;
+  parameter Real alpha=0.05;
+  parameter Real beta=0.11;
+  parameter Real S_b=1.8;
+  parameter Real G_b=95;
+  parameter Real K=2.3;
+  parameter Real gamma=0.5;
+  BioChem.Interfaces.Nodes.ModifierConnector G_connector annotation(Placement(transformation(origin={0,80}, extent={{-10,-10},{10,10}}), iconTransformation(origin={0,110}, extent={{-10,-10},{10,10}})));
+  BioChem.Interfaces.Nodes.SubstrateConnector S_connector annotation(Placement(transformation(origin={-120,-8.88178e-16}, extent={{-10,-10},{10,10}}), iconTransformation(origin={-110,0}, extent={{-10,-10},{10,10}})));
+  BioChem.Interfaces.Nodes.ModifierConnector I_po_connector annotation(Placement(transformation(origin={-90,80}, extent={{-10,-10},{10,10}}), iconTransformation(origin={-70,110}, extent={{-10,-10},{10,10}})));
+  BioChem.Interfaces.Nodes.ModifierConnector G_p_connector annotation(Placement(transformation(origin={100,80}, extent={{-10,-10},{10,10}}), iconTransformation(origin={75.1683,110}, extent={{-10,-10},{10,10}})));
+  BioChem.Substances.SignalSubstance S_calc(c=s_signal) annotation(Placement(transformation(origin={-90,0}, extent={{-10,-10},{10,10}})));
+  BioChem.Examples.GlucoseInsulinModel.Utilities.Reactions.signaltosubstance signaltosubstance1 annotation(Placement(transformation(origin={2.22045e-16,60}, extent={{-10,-10},{10,10}}, rotation=-90)));
+  BioChem.Examples.GlucoseInsulinModel.Utilities.Reactions.signaltosubstance signaltosubstance2 annotation(Placement(transformation(origin={100,60}, extent={{-10,-10},{10,10}}, rotation=-90)));
+  BioChem.Examples.GlucoseInsulinModel.Utilities.Reactions.signaltosubstance signaltosubstance3 annotation(Placement(transformation(origin={60,-30}, extent={{-10,-10},{10,10}})));
+  BioChem.Substances.SignalSubstance I_po_signal(c=i_po) annotation(Placement(transformation(origin={-90,40}, extent={{-10,-10},{10,10}})));
+  BioChem.Substances.Substance G(c=g) annotation(Placement(transformation(origin={0,40}, extent={{-10,-10},{10,10}})));
+  BioChem.Substances.Substance G_p(c=g_p) annotation(Placement(transformation(origin={100,40}, extent={{-10,-10},{10,10}})));
+  BioChem.Substances.Substance Y(c=y) annotation(Placement(transformation(origin={80,-30}, extent={{-10,-10},{10,10}})));
+  BioChem.Substances.SignalSubstance Y_signal(c=y_signal) annotation(Placement(transformation(origin={40,-30}, extent={{-10,-10},{10,10}})));
+equation
+  connect(Y_signal.n1,signaltosubstance3.s1) annotation(Line(origin={42.9167,-30}, points={{-2.91667,3.55271e-15},{-2.91667,-3.55271e-15},{5.83333,-3.55271e-15}}));
+  connect(signaltosubstance3.p1,Y.n1) annotation(Line(origin={74.1667,-30}, points={{-2.91667,0},{-2.91667,0},{5.83333,0}}));
+  connect(signaltosubstance2.p1,G_p.n1) annotation(Line(origin={100,42.9167}, points={{0,5.83333},{0,-2.91667},{0,-2.91667}}));
+  connect(signaltosubstance1.p1,G.n1) annotation(Line(origin={1.62833e-16,42.9167}, points={{8.14164e-17,5.83333},{8.14164e-17,-2.91667},{-1.62833e-16,-2.91667}}));
+  connect(I_po_connector,I_po_signal.n1) annotation(Line(origin={-90,60}, points={{0,20},{0,-20}}));
+  connect(G_p_connector,signaltosubstance2.s1) annotation(Line(origin={100,75.625}, points={{0,4.375},{0,-4.375}}));
+  connect(G_connector,signaltosubstance1.s1) annotation(Line(origin={9.99201e-17,75.625}, points={{-9.99201e-17,4.375},{9.99201e-17,-4.375}}));
+  connect(S_calc.n1,S_connector) annotation(Line(origin={-105,-4.44089e-16}, points={{15,4.44089e-16},{-15,-4.44089e-16}}));
+  der(i_po)=if der(g_p) > 0 and g > G_b then -gamma*i_po + y + K*der(g) + S_b else -gamma*i_po + y + S_b;
+  der(y_signal)=if beta*(g - G_b) < -S_b then -alpha*y_signal - alpha*S_b else -alpha*(y_signal - beta*(g - G_b));
+  s_signal=gamma*i_po;
+  annotation(Diagram(coordinateSystem(extent={{-148.5,-105},{148.5,105}}, preserveAspectRatio=true, grid={10,10})), Icon(coordinateSystem(extent={{-100,-100},{100,100}}, preserveAspectRatio=true, grid={10,10}), graphics={Text(origin={-2.41533,43.4019}, fillPattern=FillPattern.Solid, extent={{-75.99,-51.46},{75.99,51.46}}, textString="Beta", fontName="Arial"),Text(origin={1.61,-49.34}, fillPattern=FillPattern.Solid, extent={{-73.89,-40.66},{73.89,40.66}}, textString="cell", fontName="Arial")}));
+end BetaCell;

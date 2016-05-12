@@ -1,6 +1,7 @@
 within BioChem.Reactions;
 package MassAction "Mass-action kinetics reactions"
   extends Icons.Library;
+
   annotation(Documentation(info="<html>
 <h1>MassAction</h1>
  <p>

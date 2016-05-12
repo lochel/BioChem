@@ -1,0 +1,12 @@
+FlowReaction
+k_empt
+dirac
+m_3
+ReversibleFlowReaction
+RenalReaction
+UtilizationReaction
+signaltosubstance
+U_ii_reaction
+ActivationReaction
+MM_insulin
+GlucoseUptakeReaction
