@@ -1,6 +1,5 @@
 within BioChem;
 package Icons "Icons"
-  extends Library;
 
 
 
